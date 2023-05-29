@@ -7,11 +7,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+//TODO    :::::::: ::    ::    :::    ::    :: ::::::::::  ::::::::  ::      ::
+//TODO    ::    :: ::    ::   :: ::   ::::  ::     ::     ::      :: ::::  ::::
+//TODO    :::::::: ::::::::  :::::::  :: :: ::     ::     ::      :: ::  ::  ::
+//TODO    ::       ::    ::  ::   ::  ::  ::::     ::     ::      :: ::      ::
+//TODO    ::       ::    :: ::     :: ::    ::     ::      ::::::::  ::      ::
+
 @TeleOp(name = "TeleOP")
 public class TeleOP extends LinearOpMode {
 
     enum FieldState{
-        INIT,
         COLLECT,
         SCORE
     };
@@ -24,11 +29,11 @@ public class TeleOP extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         mecanisme mecanisme = new mecanisme(hardwareMap);
 
-        state = FieldState.INIT;
+        state = FieldState.COLLECT;
 
         int pos = 0;
         int LOW  = 410;
-        int MID = 820;
+        int MID =920;
         int HIGH = 1155;
 
         waitForStart();
@@ -41,7 +46,7 @@ public class TeleOP extends LinearOpMode {
             switch (state){
                 case COLLECT:
 
-                    if(gamepad1.right_bumper)mecanisme.gripper();
+                    mecanisme.gripper(gamepad1.right_bumper);
                     //LOW JUNCTION
                     if(gamepad2.cross){
                         pos = LOW;
@@ -71,12 +76,11 @@ public class TeleOP extends LinearOpMode {
                     if(gamepad2.triangle){pos = HIGH;}
 
                     if(gamepad2.right_bumper){mecanisme.turn.setPosition(mecanisme.Turn_RIGHT);}
-                    else {mecanisme.turn.setPosition(mecanisme.Turn_FRONT);}
                     if(gamepad2.left_bumper){mecanisme.turn.setPosition(mecanisme.Turn_LEFT);}
-                    else {mecanisme.turn.setPosition(mecanisme.Turn_FRONT);}
+                    if(!gamepad2.right_bumper && !gamepad2.left_bumper){mecanisme.turn.setPosition(mecanisme.Turn_FRONT);}
 
-                    if(gamepad1.right_bumper){mecanisme.pivot.setPosition(mecanisme.Pivot_UP);}
-                    else {mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);}
+                    if(gamepad1.left_trigger>0.1){mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);}
+                    else {mecanisme.pivot.setPosition(mecanisme.Pivot_UP);}
 
                     if(gamepad1.right_bumper){
                         if(mecanisme.pivot.getPosition() == mecanisme.Pivot_DOWN){
@@ -86,6 +90,7 @@ public class TeleOP extends LinearOpMode {
 
                     if(gamepad2.left_trigger >= 0.5){
                         mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+                        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
                         pos = 0;
                         state = FieldState.COLLECT;
                     }
@@ -99,8 +104,11 @@ public class TeleOP extends LinearOpMode {
                     -gamepad1.right_stick_x
             ));
 
-            if(gamepad1.left_trigger != 0){mecanisme.sula.setPosition(0);}
-            else{mecanisme.sula.setPosition(0.9);}
+            if(!gamepad1.dpad_down){
+                if(gamepad1.right_trigger != 0){mecanisme.hopa.setPosition(0);}
+                else{mecanisme.hopa.setPosition(0.3);}
+            }
+            else{mecanisme.hopa.setPosition(0.7);}
 
             mecanisme.slidePosition(pos,1);
 

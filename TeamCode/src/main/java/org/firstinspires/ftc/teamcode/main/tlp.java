@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.main;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -91,9 +92,9 @@ public class tlp extends LinearOpMode {
                     break;
 
                 case SCORE:
-                    if(gamepad2.dpad_up){mecanisme.swing.setPosition(Swing_FRONT);}
-                    if(gamepad2.dpad_right){mecanisme.swing.setPosition(Swing_LEFT);}
-                    if(gamepad2.dpad_left){mecanisme.swing.setPosition(Swing_RIGHT);}
+                    if(gamepad2.dpad_up){mecanisme.turn.setPosition(Swing_FRONT);}
+                    if(gamepad2.dpad_right){mecanisme.turn.setPosition(Swing_LEFT);}
+                    if(gamepad2.dpad_left){mecanisme.turn.setPosition(Swing_RIGHT);}
 
                     if(gamepad2.cross){pos = LOW;}
                     if(gamepad2.circle){pos = MID;}
@@ -113,7 +114,7 @@ public class tlp extends LinearOpMode {
             telemetry.addData("STATE", state);
             telemetry.addData("GRIPPER", mecanisme.grip.getPosition());
             telemetry.addData("PIVOT", mecanisme.pivot.getPosition());
-            telemetry.addData("SWING", mecanisme.swing.getPosition());
+            telemetry.addData("SWING", mecanisme.turn.getPosition());
             telemetry.addData("SLIDE", mecanisme.slide.getCurrentPosition());
             telemetry.update();
         }

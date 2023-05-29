@@ -8,14 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class mecanisme{
 
     DcMotor slide;
-    Servo grip, pivot, turn, sula;
+    Servo grip, pivot, turn, hopa;
 
-    double Gripper_OPEN = 1;
-    double Gripper_CLOSE = 0.5;
-    double Pivot_UP = 0.2;
-    double Pivot_DOWN = 0.3;
-
-    double Pivot_SusDeTot = 0.8;
+    double Gripper_OPEN = 0.1;
+    double Gripper_CLOSE = 0.7;
+    double Pivot_SusDeTot = 0.2;
+    double Pivot_UP = 0.65;
+    double Pivot_DOWN = 0.8;
     double Turn_FRONT = 0.5;
     double Turn_RIGHT = 0.4;
     double Turn_LEFT = 0.6;
@@ -29,8 +28,13 @@ public class mecanisme{
         slide = hardwareMap.get(DcMotor.class, "slide");
         grip = hardwareMap.get(Servo.class, "grip");
         pivot = hardwareMap.get(Servo.class, "pivot");
-        turn = hardwareMap.get(Servo.class,"swing");
-        sula = hardwareMap.get(Servo.class,"sula");
+        turn = hardwareMap.get(Servo.class,"turn");
+        hopa = hardwareMap.get(Servo.class,"sula");
+
+        grip.setPosition(Gripper_CLOSE);
+        pivot.setPosition(Pivot_DOWN);
+        turn.setPosition(Turn_FRONT);
+        hopa.setPosition(0.7);
 
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -44,12 +48,14 @@ public class mecanisme{
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void gripper() {
-        if (grip.getPosition() >= Gripper_OPEN) {
-            grip.setPosition(Gripper_CLOSE);
-        } else {
-            grip.setPosition(Gripper_OPEN);
+    public void gripper(boolean x) {
+        if(x){
+            if(grip.getPosition() == Gripper_CLOSE){
+                grip.setPosition(Gripper_OPEN);
+            }
+            else {
+                grip.setPosition(Gripper_CLOSE);
+            }
         }
     }
-
 }
