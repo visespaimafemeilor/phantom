@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.main;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 //TODO    :::::::: ::    ::    :::    ::    :: ::::::::::  ::::::::  ::      ::
@@ -12,8 +17,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //TODO    :::::::: ::::::::  :::::::  :: :: ::     ::     ::      :: ::  ::  ::
 //TODO    ::       ::    ::  ::   ::  ::  ::::     ::     ::      :: ::      ::
 //TODO    ::       ::    :: ::     :: ::    ::     ::      ::::::::  ::      ::
-
-@TeleOp(name = "TeleOP")
+@Config
+@Autonomous(name = "TeleOP")
 public class TeleOP extends LinearOpMode {
 
     enum FieldState{
@@ -28,6 +33,8 @@ public class TeleOP extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         mecanisme mecanisme = new mecanisme(hardwareMap);
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
 
         state = FieldState.COLLECT;
 
@@ -38,7 +45,7 @@ public class TeleOP extends LinearOpMode {
 
         waitForStart();
 
-        while(opModeIsActive() && !isStopRequested()){
+        while( !isStopRequested()){
 
 
             pos+= (gamepad2.right_trigger-gamepad2.left_trigger);
@@ -48,21 +55,21 @@ public class TeleOP extends LinearOpMode {
 
                     mecanisme.gripper(gamepad1.right_bumper);
                     //LOW JUNCTION
-                    if(gamepad2.cross){
+                    if(gamepad1.cross && mecanisme.grip.getPosition()>0.6){
                         pos = LOW;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //MID JUNCTION
-                    if(gamepad2.circle & mecanisme.grip.getPosition()<0.6){
+                    if(gamepad1.circle && mecanisme.grip.getPosition()>0.6){
                         pos = MID;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //HIGH JUNCTION
-                    if(gamepad2.triangle &&  mecanisme.grip.getPosition()<0.6){
+                    if(gamepad1.triangle &&  mecanisme.grip.getPosition()>0.6){
                         pos = HIGH;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
@@ -104,11 +111,9 @@ public class TeleOP extends LinearOpMode {
                     -gamepad1.right_stick_x
             ));
 
-            if(!gamepad1.dpad_down){
-                if(gamepad1.right_trigger != 0){mecanisme.hopa.setPosition(0);}
-                else{mecanisme.hopa.setPosition(0.3);}
-            }
-            else{mecanisme.hopa.setPosition(0.7);}
+            if(gamepad1.right_trigger != 0){mecanisme.hopa.setPosition(0);}
+            else if (gamepad1.dpad_down){mecanisme.hopa.setPosition(0.7);}
+            else if (gamepad1.right_trigger==0 && mecanisme.hopa.getPosition() <= 0.3){mecanisme.hopa.setPosition(0.3);}
 
             mecanisme.slidePosition(pos,1);
 
@@ -117,6 +122,7 @@ public class TeleOP extends LinearOpMode {
             telemetry.addData("PIVOT", mecanisme.pivot.getPosition());
             telemetry.addData("SWING", mecanisme.turn.getPosition());
             telemetry.addData("SLIDE", mecanisme.slide.getCurrentPosition());
+            telemetry.addData("boton ", gamepad1.triangle);
             telemetry.update();
         }
 
