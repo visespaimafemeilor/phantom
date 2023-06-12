@@ -7,22 +7,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class mecanisme{
 
-    DcMotor slide;
-    Servo grip, pivot, turn, hopa;
+    public DcMotor slide;
+    public Servo grip, pivot, turn, hopa;
 
-    double Gripper_OPEN = 0.1;
-    double Gripper_CLOSE = 0.7;
-    double Pivot_SusDeTot = 0.2;
-    double Pivot_UP = 0.65;
-    double Pivot_DOWN = 0.8;
-    double Turn_FRONT = 0.5;
-    double Turn_RIGHT = 0.4;
-    double Turn_LEFT = 0.6;
-
-    int pos = 0;
-    int LOW  = -410;
-    int MID = -820;
-    int HIGH = -1155;
+    public double Gripper_OPEN = 0.1;
+    public double Gripper_CLOSE = 0.7;
+    public double Pivot_SusDeTot = 0.2;
+    public double Pivot_UP = 0.65;
+    public double Pivot_DOWN = 0.77;
+    public double Turn_FRONT = 0.5;
+    public double Turn_RIGHT = 0.397;
+    public double Turn_LEFT = 0.59;
 
     public mecanisme(HardwareMap hardwareMap){
         slide = hardwareMap.get(DcMotor.class, "slide");

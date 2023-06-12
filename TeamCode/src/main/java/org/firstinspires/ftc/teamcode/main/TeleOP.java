@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //TODO    ::       ::    ::  ::   ::  ::  ::::     ::     ::      :: ::      ::
 //TODO    ::       ::    :: ::     :: ::    ::     ::      ::::::::  ::      ::
 @Config
-@Autonomous(name = "TeleOP")
+@TeleOp(name = "TeleOP")
 public class TeleOP extends LinearOpMode {
 
     enum FieldState{
@@ -39,9 +39,9 @@ public class TeleOP extends LinearOpMode {
         state = FieldState.COLLECT;
 
         int pos = 0;
-        int LOW  = 410;
-        int MID =920;
-        int HIGH = 1155;
+        int LOW = 480;
+        int MID = 890;
+        int HIGH = 1230;
 
         waitForStart();
 
@@ -55,21 +55,21 @@ public class TeleOP extends LinearOpMode {
 
                     mecanisme.gripper(gamepad1.right_bumper);
                     //LOW JUNCTION
-                    if(gamepad1.cross && mecanisme.grip.getPosition()>0.6){
+                    if(gamepad2.cross){
                         pos = LOW;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //MID JUNCTION
-                    if(gamepad1.circle && mecanisme.grip.getPosition()>0.6){
+                    if(gamepad2.circle ){
                         pos = MID;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //HIGH JUNCTION
-                    if(gamepad1.triangle &&  mecanisme.grip.getPosition()>0.6){
+                    if(gamepad2.triangle){
                         pos = HIGH;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
@@ -78,9 +78,25 @@ public class TeleOP extends LinearOpMode {
                     break;
 
                 case SCORE:
-                    if(gamepad2.cross){pos = LOW;}
-                    if(gamepad2.circle){pos = MID;}
-                    if(gamepad2.triangle){pos = HIGH;}
+                    if(gamepad2.cross){
+                        pos = LOW;
+                        mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
+                        state = FieldState.SCORE;
+                    }
+
+                    //MID JUNCTION
+                    if(gamepad2.circle ){
+                        pos = MID;
+                        mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
+                        state = FieldState.SCORE;
+                    }
+
+                    //HIGH JUNCTION
+                    if(gamepad2.triangle){
+                        pos = HIGH;
+                        mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
+                        state = FieldState.SCORE;
+                    }
 
                     if(gamepad2.right_bumper){mecanisme.turn.setPosition(mecanisme.Turn_RIGHT);}
                     if(gamepad2.left_bumper){mecanisme.turn.setPosition(mecanisme.Turn_LEFT);}
@@ -90,12 +106,11 @@ public class TeleOP extends LinearOpMode {
                     else {mecanisme.pivot.setPosition(mecanisme.Pivot_UP);}
 
                     if(gamepad1.right_bumper){
-                        if(mecanisme.pivot.getPosition() == mecanisme.Pivot_DOWN){
                             mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
-                        }
+
                     }
 
-                    if(gamepad2.left_trigger >= 0.5){
+                    if(gamepad2.square){
                         mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
                         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
                         pos = 0;

@@ -45,8 +45,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
-    public static double X_MULTIPLIER = 1.02; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.02; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 1.015; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1.015; // Multiplier in the Y direction
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
