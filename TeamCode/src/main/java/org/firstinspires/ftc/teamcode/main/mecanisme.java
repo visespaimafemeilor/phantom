@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.main;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -43,7 +45,7 @@ public class mecanisme{
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void gripper(boolean x) {
+    public void gripper(boolean x) throws InterruptedException{
         if(x){
             if(grip.getPosition() == Gripper_CLOSE){
                 grip.setPosition(Gripper_OPEN);

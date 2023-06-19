@@ -39,9 +39,9 @@ public class TeleOP extends LinearOpMode {
         state = FieldState.COLLECT;
 
         int pos = 0;
-        int LOW = 480;
+        int LOW = 490;
         int MID = 890;
-        int HIGH = 1230;
+        int HIGH = 1240;
 
         waitForStart();
 
