@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.apache.commons.math3.ode.ContinuousOutputModel;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -38,6 +39,8 @@ public class TeleOP extends LinearOpMode {
 
         state = FieldState.COLLECT;
 
+        boolean compact = false;
+
         int pos = 0;
         int LOW = 490;
         int MID = 890;
@@ -48,7 +51,7 @@ public class TeleOP extends LinearOpMode {
         while( !isStopRequested()){
 
 
-            pos+= (gamepad2.right_trigger-gamepad2.left_trigger);
+            pos+= (gamepad2.right_trigger-gamepad2.left_trigger)*7;
 
             switch (state){
                 case COLLECT:
@@ -75,6 +78,18 @@ public class TeleOP extends LinearOpMode {
                         state = FieldState.SCORE;
                     }
 
+                    //PIVOT
+                    if(gamepad1.dpad_up){
+                        if(compact){
+                            mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+                            compact = false;
+                        }
+                        else{
+                            mecanisme.pivot.setPosition(mecanisme.Pivot_SusDeTot);
+                            compact = true;
+                        }
+                    }
+                    
                     break;
 
                 case SCORE:

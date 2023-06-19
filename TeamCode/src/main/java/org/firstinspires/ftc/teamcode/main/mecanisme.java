@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class mecanisme{
 
+    boolean ok = false;
     public DcMotor slide;
     public Servo grip, pivot, turn, hopa;
 
@@ -47,11 +48,16 @@ public class mecanisme{
 
     public void gripper(boolean x) throws InterruptedException{
         if(x){
-            if(grip.getPosition() == Gripper_CLOSE){
-                grip.setPosition(Gripper_OPEN);
+            if(ok){
+                grip.setPosition(Gripper_CLOSE);
+                ok = false;
+                sleep(150);
             }
             else {
-                grip.setPosition(Gripper_CLOSE);
+
+                grip.setPosition(Gripper_OPEN);
+                ok = true;
+                sleep(150);
             }
         }
     }
