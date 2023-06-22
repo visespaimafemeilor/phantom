@@ -42,9 +42,9 @@ public class TeleOP extends LinearOpMode {
         boolean compact = false;
 
         int pos = 0;
-        int LOW = 490;
-        int MID = 890;
-        int HIGH = 1240;
+        int LOW = 500;
+        int MID = 880;
+        int HIGH = 1250;
 
         waitForStart();
 
@@ -89,7 +89,7 @@ public class TeleOP extends LinearOpMode {
                             compact = true;
                         }
                     }
-                    
+
                     break;
 
                 case SCORE:

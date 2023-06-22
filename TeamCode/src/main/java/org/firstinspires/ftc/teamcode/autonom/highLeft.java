@@ -15,7 +15,7 @@ public class highLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Pose2d start = new Pose2d(0,0,Math.toRadians(0));
+        Pose2d start = new Pose2d(0,0,0);
 
         Pose2d stack = new Pose2d(2,51.5, 0 );
         Pose2d junction = new Pose2d(-2,51.5, 0 );
@@ -39,6 +39,7 @@ public class highLeft extends LinearOpMode {
 
 
         TrajectorySequence preload = drive.trajectorySequenceBuilder(start)
+                .lineToLinearHeading(new Pose2d(50,-5.2,0))
                 .lineToLinearHeading(new Pose2d(52.5,-5.2,Math.toRadians(315)))
                 .addDisplacementMarker(1, ()->{
                     mecanisme.slidePosition(1230,1);
