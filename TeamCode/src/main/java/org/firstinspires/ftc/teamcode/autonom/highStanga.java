@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autonom;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -10,113 +12,151 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.main.mecanisme;
 import org.firstinspires.ftc.teamcode.reconoastere.Detection;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.opencv.core.Mat;
 
 @Autonomous(group = "auto")
 public class highStanga extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d start = new Pose2d(0,0,Math.toRadians(90));
+
+        Pose2d start = new Pose2d(0, 0, Math.toRadians(0));
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         mecanisme mecanisme = new mecanisme(hardwareMap);
 
+        Detection detection = new Detection();
+        detection.VisionInitialization(hardwareMap,telemetry);
+
         drive.setPoseEstimate(start);
         mecanisme.pivot.setPosition(mecanisme.Pivot_SusDeTot);
+        mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
 
-        Detection detection = new Detection();
-        detection.VisionInitialization(hardwareMap, telemetry);
-
-        double slowerVelocity = 35;
-        double slowerAcceleration = 30;
-
-        int pos = 244;
-        int i=1;
-
-        //TODO preload si alinierea cu stiva
 
         TrajectorySequence preload = drive.trajectorySequenceBuilder(start)
-                .lineTo(
-                        new Vector2d(0, 37),
-                        SampleMecanumDrive.getVelocityConstraint(slowerVelocity, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(slowerAcceleration)
-                )
-                .addDisplacementMarker(2, ()->{
-                    mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
-                    mecanisme.slidePosition(920, 1);
-                    mecanisme.turn.setPosition(mecanisme.Turn_LEFT);
+                .lineToLinearHeading(new Pose2d(51, 2, Math.toRadians(0)))
+                .addDisplacementMarker(2, () -> {
+                    mecanisme.slidePosition(1240, 1);
+
                 })
+                .turn(Math.toRadians(-39))
                 .build();
 
 
         TrajectorySequence align = drive.trajectorySequenceBuilder(preload.end())
-                .addDisplacementMarker(()->{
+                // .turn(Math.toRadians(-129))
+                .lineToLinearHeading(new Pose2d(51.5, 22, Math.toRadians(90)))
+                .addDisplacementMarker(2, () -> {
+//                    mecanisme.slidePosition(220, 1);
                     mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
-                    sleep(500);
-                    mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+//                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+
                 })
-                .lineToLinearHeading(new Pose2d(0,52,Math.toRadians(180)))
-                .addDisplacementMarker(1, ()->{
-                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
-                    mecanisme.slidePosition(244, 1);
-                })
-                .lineToConstantHeading(new Vector2d(-19.6,51.5))
                 .build();
 
-        //TODO HIGH
-
-        TrajectorySequence junction = drive.trajectorySequenceBuilder(align.end())
+        TrajectorySequence pole = drive.trajectorySequenceBuilder(align.end())
                 .addDisplacementMarker(()->{
                     mecanisme.grip.setPosition(mecanisme.Gripper_CLOSE);
-                    sleep(400);
+                    sleep(200);
                     mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
-                    mecanisme.slidePosition(1155,1);
                 })
-                .lineTo(
-                        new Vector2d(9.5, 51.5),
-                        SampleMecanumDrive.getVelocityConstraint(slowerVelocity, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(slowerAcceleration)
-                )
-                .addDisplacementMarker(2, ()->{
-                    mecanisme.turn.setPosition(mecanisme.Turn_LEFT);
+                .lineToLinearHeading(new Pose2d(50.7, -12.5, Math.toRadians(90)))
+                .addDisplacementMarker(2, () -> {
+                    mecanisme.slidePosition(1240, 1);
+                    mecanisme.turn.setPosition(0.41);
+
                 })
                 .build();
+
+        TrajectorySequence stack = drive.trajectorySequenceBuilder(pole.end())
+                .addDisplacementMarker(()->{
+                    mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
+                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+                })
+                .lineToLinearHeading(new Pose2d(51.5, 22, Math.toRadians(90)))
+                .addDisplacementMarker(2, () -> {
+                    mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+//                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+
+                })
+                .build();
+
+        Trajectory CAZ1 = drive.trajectoryBuilder(pole.end())
+                .lineToLinearHeading(new Pose2d(51.5, 21, Math.toRadians(90)))
+                .build();
+
+        Trajectory CAZ2 = drive.trajectoryBuilder(pole.end())
+                .lineToLinearHeading(new Pose2d(51.5, -1, Math.toRadians(90)))
+                .build();
+
+        Trajectory CAZ3 = drive.trajectoryBuilder(pole.end())
+                .lineToLinearHeading(new Pose2d(51.5, -26, Math.toRadians(90)))
+                .build();
+
 
         waitForStart();
 
         detection.detectare(telemetry);
 
-        if(opModeIsActive()){
-            drive.followTrajectorySequence(preload);
-            drive.followTrajectorySequence(align);
-            drive.followTrajectorySequence(junction);
+        //todo PPRELOAD
+        drive.followTrajectorySequence(preload);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(150);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+        mecanisme.slidePosition(0, 0.7);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_SusDeTot);
 
-            while (i<=4){
-                pos = pos - 63*(i);
-                staking(pos, drive, junction, mecanisme);
-                drive.followTrajectorySequence(junction);
-                i++;
-            }
+        //todo FIRST
+        mecanisme.slidePosition(225, 1);
+        drive.followTrajectorySequence(align);
+        drive.followTrajectorySequence(pole);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(100);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+
+        //todo SECOND
+        mecanisme.slidePosition(185, 1);
+        drive.followTrajectorySequence(stack);
+        drive.followTrajectorySequence(pole);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(100);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+
+        //todo THIRD
+        mecanisme.slidePosition(130, 1);
+        drive.followTrajectorySequence(stack);
+        drive.followTrajectorySequence(pole);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(100);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+
+        //todo FOURTH
+        mecanisme.slidePosition(70, 1);
+        drive.followTrajectorySequence(stack);
+        drive.followTrajectorySequence(pole);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(100);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+
+        //todo FIFTH
+        mecanisme.slidePosition(0, 1);
+        drive.followTrajectorySequence(stack);
+        drive.followTrajectorySequence(pole);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        sleep(100);
+        mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
+
+
+        mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+        mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
+        mecanisme.slidePosition(0, 0.5);
+
+        if (detection.CAZ == 1) {
+            drive.followTrajectory(CAZ1);
+        } else if (detection.CAZ == 2) {
+            drive.followTrajectory(CAZ2);
+        } else {
+            drive.followTrajectory(CAZ3);
         }
     }
 
-    public void staking (int position, SampleMecanumDrive drive, TrajectorySequence t, mecanisme mecanisme){
-        TrajectorySequence stack = drive.trajectorySequenceBuilder(t.end())
-                .addDisplacementMarker(()->{
-                    mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
-                    mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
-                    sleep(200);
-                    mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
-                })
-                .addDisplacementMarker(2, ()->{
-                    mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
-                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
-                    sleep(500);
-                })
-                .addDisplacementMarker(4, ()->{
-                    mecanisme.slidePosition(position,1);
-                })
-                .lineToConstantHeading(new Vector2d(-19.5,51.5))
-                .build();
-
-        drive.followTrajectorySequence(stack);
-    }
 }
