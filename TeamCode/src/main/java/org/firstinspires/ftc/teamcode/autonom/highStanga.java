@@ -59,10 +59,10 @@ public class highStanga extends LinearOpMode {
                     sleep(200);
                     mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                 })
-                .lineToLinearHeading(new Pose2d(50.7, -12.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(50.6, -12.7, Math.toRadians(90)))
                 .addDisplacementMarker(2, () -> {
-                    mecanisme.slidePosition(1240, 1);
-                    mecanisme.turn.setPosition(0.41);
+                    mecanisme.slidePosition(1250, 1);
+                    mecanisme.turn.setPosition(0.59);
 
                 })
                 .build();
@@ -72,7 +72,7 @@ public class highStanga extends LinearOpMode {
                     mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                     mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
                 })
-                .lineToLinearHeading(new Pose2d(51.5, 22, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(51.4, 22, Math.toRadians(90)))
                 .addDisplacementMarker(2, () -> {
                     mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
 //                    mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
@@ -81,15 +81,15 @@ public class highStanga extends LinearOpMode {
                 .build();
 
         Trajectory CAZ1 = drive.trajectoryBuilder(pole.end())
-                .lineToLinearHeading(new Pose2d(51.5, 21, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(50, 21, Math.toRadians(90)))
                 .build();
 
         Trajectory CAZ2 = drive.trajectoryBuilder(pole.end())
-                .lineToLinearHeading(new Pose2d(51.5, -1, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(51.5, 0, Math.toRadians(90)))
                 .build();
 
         Trajectory CAZ3 = drive.trajectoryBuilder(pole.end())
-                .lineToLinearHeading(new Pose2d(51.5, -26, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(51.5, -25, Math.toRadians(90)))
                 .build();
 
 
@@ -100,13 +100,13 @@ public class highStanga extends LinearOpMode {
         //todo PPRELOAD
         drive.followTrajectorySequence(preload);
         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
-        sleep(150);
+        sleep(250);
         mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
         mecanisme.slidePosition(0, 0.7);
         mecanisme.pivot.setPosition(mecanisme.Pivot_SusDeTot);
 
         //todo FIRST
-        mecanisme.slidePosition(225, 1);
+        mecanisme.slidePosition(250, 1);
         drive.followTrajectorySequence(align);
         drive.followTrajectorySequence(pole);
         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
@@ -114,7 +114,7 @@ public class highStanga extends LinearOpMode {
         mecanisme.grip.setPosition(mecanisme.Gripper_OPEN);
 
         //todo SECOND
-        mecanisme.slidePosition(185, 1);
+        mecanisme.slidePosition(200, 1);
         drive.followTrajectorySequence(stack);
         drive.followTrajectorySequence(pole);
         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
@@ -150,13 +150,15 @@ public class highStanga extends LinearOpMode {
         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
         mecanisme.slidePosition(0, 0.5);
 
-        if (detection.CAZ == 1) {
-            drive.followTrajectory(CAZ1);
-        } else if (detection.CAZ == 2) {
-            drive.followTrajectory(CAZ2);
-        } else {
-            drive.followTrajectory(CAZ3);
-        }
+        drive.followTrajectory(CAZ2);
+
+//        if (detection.CAZ == 1) {
+//            drive.followTrajectory(CAZ1);
+//        } else if (detection.CAZ == 2) {
+//            drive.followTrajectory(CAZ2);
+//        } else {
+//            drive.followTrajectory(CAZ3);
+//        }
     }
 
 }
