@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.main.mecanisme;
 import org.firstinspires.ftc.teamcode.reconoastere.Detection;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -24,23 +25,27 @@ public class parcare extends LinearOpMode {
 
         Detection detection = new Detection();
         detection.VisionInitialization(hardwareMap, telemetry);
+        mecanisme mecanisme = new mecanisme(hardwareMap);
 
         Pose2d start = new Pose2d(0, 0, 0);
         drive.setPoseEstimate(start);
 
+        mecanisme.pivot.setPosition(mecanisme.Pivot_SusDeTot);
+        mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
+
 
         TrajectorySequence CAZ1 = drive.trajectorySequenceBuilder(start)
-                .strafeLeft(22)
-                .forward(30)
+                .strafeLeft(40)
+                .forward(40)
                 .build();
 
         Trajectory CAZ2 = drive.trajectoryBuilder(start)
-                .forward(30)
+                .forward(40)
                 .build();
 
         TrajectorySequence CAZ3 = drive.trajectorySequenceBuilder(start)
-                .strafeRight(22)
-                .forward(30)
+                .strafeRight(40)
+                .forward(40)
                 .build();
 
         waitForStart();

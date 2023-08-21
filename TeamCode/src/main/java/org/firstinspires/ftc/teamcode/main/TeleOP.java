@@ -42,9 +42,9 @@ public class TeleOP extends LinearOpMode {
         boolean compact = false;
 
         int pos = 0;
-        int LOW = 500;
-        int MID = 880;
-        int HIGH = 1250;
+        int LOW = 550;
+        int MID = 900;
+        int HIGH = 1270;
 
         waitForStart();
 
@@ -58,21 +58,21 @@ public class TeleOP extends LinearOpMode {
 
                     mecanisme.gripper(gamepad1.right_bumper);
                     //LOW JUNCTION
-                    if(gamepad2.cross){
+                    if(gamepad2.dpad_down){
                         pos = LOW;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //MID JUNCTION
-                    if(gamepad2.circle ){
+                    if(gamepad2.dpad_right){
                         pos = MID;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //HIGH JUNCTION
-                    if(gamepad2.triangle){
+                    if(gamepad2.dpad_up){
                         pos = HIGH;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
@@ -93,21 +93,21 @@ public class TeleOP extends LinearOpMode {
                     break;
 
                 case SCORE:
-                    if(gamepad2.cross){
+                    if(gamepad2.dpad_down){
                         pos = LOW;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //MID JUNCTION
-                    if(gamepad2.circle ){
+                    if(gamepad2.dpad_right ){
                         pos = MID;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
                     }
 
                     //HIGH JUNCTION
-                    if(gamepad2.triangle){
+                    if(gamepad2.dpad_up){
                         pos = HIGH;
                         mecanisme.pivot.setPosition(mecanisme.Pivot_UP);
                         state = FieldState.SCORE;
@@ -125,7 +125,7 @@ public class TeleOP extends LinearOpMode {
 
                     }
 
-                    if(gamepad2.square){
+                    if(gamepad2.dpad_left){
                         mecanisme.turn.setPosition(mecanisme.Turn_FRONT);
                         mecanisme.pivot.setPosition(mecanisme.Pivot_DOWN);
                         pos = 0;
@@ -136,8 +136,8 @@ public class TeleOP extends LinearOpMode {
             }
 
             drive.setWeightedDrivePower(new Pose2d (
-                    gamepad1.left_stick_y,
-                    gamepad1.left_stick_x,
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x,
                     -gamepad1.right_stick_x
             ));
 

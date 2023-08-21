@@ -16,7 +16,7 @@ public class mecanisme{
     public double Gripper_OPEN = 0.4;
     public double Gripper_CLOSE = 0.7;
     public double Pivot_SusDeTot = 0.37;
-    public double Pivot_UP = 0.62;
+    public double Pivot_UP = 0.61;
     public double Pivot_DOWN = 0.69;
     public double Turn_FRONT = 0.5;
     public double Turn_RIGHT = 0.397;
